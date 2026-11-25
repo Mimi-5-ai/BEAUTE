@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
+    "build:pages": "vite build --mode pages",
+    "deploy": "npm run build:pages && git add . && git commit -m \"update\" && git push",
     "preview": "vite preview",
     "format": "oxfmt"
   },

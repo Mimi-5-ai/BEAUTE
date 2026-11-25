@@ -2,19 +2,24 @@ import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
+import fs from 'node:fs'
 
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
   const emitSourcemaps = mode === 'development'
+  // وضع النشر على GitHub Pages: يبني داخل docs بمسار /BEAUTE/
+  const isPages = mode === 'pages' || process.env.GITHUB_PAGES === 'true'
 
   return {
-    base: process.env.GITHUB_PAGES === 'true'
+    base: isPages
       ? '/BEAUTE/'
       : process.env.FIGMA_PUBLIC_URL
         ? `${process.env.FIGMA_PUBLIC_URL}/`
         : '/',
     build: {
+      outDir: isPages ? 'docs' : 'dist',
+      emptyOutDir: true,
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
     },
@@ -24,6 +29,7 @@ export default defineConfig(({ mode }) => {
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
+      githubPagesFallback(isPages),
     ],
     server: {
       host: '0.0.0.0',
@@ -37,6 +43,26 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
+
+/**
+ * بعد البناء لـ GitHub Pages ينسخ index.html إلى 404.html،
+ * عشان لو أحد فتح رابط /BEAUTE/prices مباشرة أو سوّى تحديث للصفحة ما يطلع له خطأ 404.
+ */
+function githubPagesFallback(enabled: boolean): Plugin {
+  let outDir = 'docs'
+  return {
+    name: 'github-pages-fallback',
+    apply: 'build',
+    configResolved(config) {
+      outDir = config.build.outDir
+    },
+    closeBundle() {
+      if (!enabled) return
+      const index = path.resolve(outDir, 'index.html')
+      if (fs.existsSync(index)) fs.copyFileSync(index, path.resolve(outDir, '404.html'))
+    },
+  }
+}
 
 type FigmaSiteConfiguration = {
   title?: string
