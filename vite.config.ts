@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: process.env.GITHUB_PAGES === 'true'
-      ? '/beauty-clinic-site/'
+      ? '/BEAUTE/'
       : process.env.FIGMA_PUBLIC_URL
         ? `${process.env.FIGMA_PUBLIC_URL}/`
         : '/',
