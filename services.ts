@@ -100,7 +100,7 @@ priceRows.push(
     price: 100,
     category: "whitening",
     description: "عناية تشقير تناسب نبرة بشرتكِ.",
-    image: "/images/بوتكس_حواجب.jpg",
+    image: "/images/جهاز_تشقير.jpg",
   },
   {
     id: "whitening-face",
@@ -108,7 +108,7 @@ priceRows.push(
     price: 150,
     category: "whitening",
     description: "عناية تشقير تناسب نبرة بشرتكِ.",
-    image: "/images/بروفايلو.jpg",
+    image: "/images/جهاز_تشقير.jpg",
   },
   {
     id: "whitening-face-brows",
@@ -116,7 +116,7 @@ priceRows.push(
     price: 220,
     category: "whitening",
     description: "عناية تشقير متكاملة للوجه والحواجب.",
-    image: "/images/بروفايلو.jpg",
+    image: "/images/جهاز_تشقير.jpg",
   },
   {
     id: "whitening-back",
@@ -124,15 +124,7 @@ priceRows.push(
     price: 250,
     category: "whitening",
     description: "عناية تشقير تناسب نبرة بشرتكِ.",
-    image: "/images/fillers.webp",
-  },
-  {
-    id: "whitening-chest",
-    name: "تشقير صدر",
-    price: 200,
-    category: "whitening",
-    description: "عناية تشقير تناسب نبرة بشرتكِ.",
-    image: "/images/fillers.webp",
+    image: "/images/جهاز_تشقير.jpg",
   },
   {
     id: "whitening-belly",
@@ -140,7 +132,7 @@ priceRows.push(
     price: 250,
     category: "whitening",
     description: "عناية تشقير تناسب نبرة بشرتكِ.",
-    image: "/images/fillers.webp",
+    image: "/images/جهاز_تشقير.jpg",
   },
   {
     id: "whitening-neck",
@@ -148,27 +140,20 @@ priceRows.push(
     price: 150,
     category: "whitening",
     description: "عناية تشقير تناسب نبرة بشرتكِ.",
-    image: "/images/خطوط_الرقبة.jpg",
+    image: "/images/جهاز_تشقير.jpg",
   },
 )
 
-priceRows.push({
-  id: "laser-section",
-  name: "قسم الليزر",
-  price: null,
-  category: "laser",
-  description: "تقنيات حديثة وعناية تراعي بشرتكِ.",
-  image: "/images/laser.webp",
-})
+
 
 priceRows.push(
   {
     id: "laser-full-face",
-    name: "ليزر كامل الجسم مع الوجه",
+    name: "ليزر كامل الجسم ",
     price: 650,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-full-back-belly-face",
@@ -176,7 +161,7 @@ priceRows.push(
     price: 550,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-full-legs",
@@ -184,7 +169,7 @@ priceRows.push(
     price: 300,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-half-legs",
@@ -192,7 +177,7 @@ priceRows.push(
     price: 180,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-belly",
@@ -200,7 +185,7 @@ priceRows.push(
     price: 250,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-hips",
@@ -208,7 +193,7 @@ priceRows.push(
     price: 250,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-back",
@@ -216,7 +201,7 @@ priceRows.push(
     price: 250,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-chest",
@@ -224,7 +209,7 @@ priceRows.push(
     price: 200,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-full-arms",
@@ -232,7 +217,7 @@ priceRows.push(
     price: 180,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-half-arms",
@@ -240,7 +225,7 @@ priceRows.push(
     price: 100,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-face",
@@ -248,7 +233,7 @@ priceRows.push(
     price: 150,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-bikini",
@@ -256,7 +241,7 @@ priceRows.push(
     price: 150,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-neck",
@@ -264,7 +249,7 @@ priceRows.push(
     price: 150,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-upper-lip",
@@ -272,7 +257,7 @@ priceRows.push(
     price: 100,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-armpit",
@@ -280,7 +265,7 @@ priceRows.push(
     price: 100,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
   {
     id: "laser-chin",
@@ -288,7 +273,7 @@ priceRows.push(
     price: 50,
     category: "laser",
     description: "تقنية ليزر وعناية تراعي بشرتكِ.",
-    image: "/images/laser.webp",
+    image: "/images/ليزر.jpg",
   },
 )
 
@@ -324,7 +309,7 @@ featuredTreatments.splice(4, 0, {
   price: null,
   category: "laser",
   description: "تقنيات حديثة وعناية تراعي بشرتكِ.",
-  image: "/images/laser.webp",
+  image: "/images/ليزر_هيرو.jpg",
 })
 
 export const formatPrice = (price: number) =>

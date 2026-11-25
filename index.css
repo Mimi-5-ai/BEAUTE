@@ -1,94 +1,184 @@
+/* ==========================================================================
+   ملف التنسيق الرئيسي لموقع أحاسيس الجمال
+   --------------------------------------------------------------------------
+   فهرس الملف (ابحث بـ Ctrl+F عن رقم القسم):
+   [1]  الخطوط والمتغيرات الأساسية
+   [2]  الإعدادات العامة (body, button, a ...)
+   [3]  الهيدر (الشريط العلوي) والشعار والقائمة
+   [4]  الأزرار العامة
+   [5]  قسم الواجهة الرئيسية (Hero)
+   [6]  قسم الخدمات (عناوين + سلايدر الكروت)
+   [7]  كروت أقسام الليزر والتشقير
+   [8]  بانر العناية
+   [9]  قسم إنديبا INDIBA
+   [10] قبل وبعد (غير مستخدم حالياً)
+   [11] صفحة الأسعار /prices
+   [12] قسم عن المجمع
+   [13] قسم التواصل والفوتر
+   [14] النوافذ المنبثقة (Modal)
+   [15] التجاوب مع الشاشات (شاشات كبيرة / تابلت / جوال)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   [1] الخطوط والمتغيرات الأساسية
+   ========================================================================== */
+
+/* تحميل خط IBM Plex Sans Arabic من جوجل */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;450;500;600;700&display=swap');
 @import 'tailwindcss';
 
+/* ألوان وخط Tailwind */
 @theme {
   --font-sans: 'IBM Plex Sans Arabic', sans-serif;
   --color-brown: #4a2d20;
   --color-cream: #faf5ef;
 }
 
+/* متغيرات الألوان المستخدمة بكل الموقع */
 :root {
   font-family: var(--font-sans);
   color: #4b3429;
   background: #fbf7f2;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
-  --brown: #4a2d20;
-  --ink: #513a2e;
-  --muted: #9a8272;
-  --line: #e6d8cb;
+  --brown: #4a2d20;   /* البني الغامق (الأزرار والعناوين) */
+  --ink: #513a2e;     /* لون النص الأساسي */
+  --muted: #9a8272;   /* لون النص الخافت */
+  --line: #e6d8cb;    /* لون الخطوط الفاصلة */
 }
-* { box-sizing: border-box; }
-body { margin: 0; min-width: 360px; }
-button, input { font: inherit; }
+
+
+/* ==========================================================================
+   [2] الإعدادات العامة
+   ========================================================================== */
+
+* { box-sizing: border-box; }                       /* العرض يشمل الحشو والإطار */
+body { margin: 0; min-width: 360px; }               /* أقل عرض للموقع 360px */
+button, input { font: inherit; }                    /* الأزرار والحقول تاخذ نفس خط الموقع */
+
+/* حركة ناعمة عند تغيير ألوان الأزرار والروابط + إلغاء وميض اللمس بالجوال */
 button, a { -webkit-tap-highlight-color: transparent; transition: background .2s, color .2s, transform .2s, box-shadow .2s; }
 button { cursor: pointer; border: 0; }
 button:disabled { cursor: default; }
+
+/* إطار التركيز عند التنقل بلوحة المفاتيح */
 button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid #a17b5c; outline-offset: 5px; }
-button svg, a svg { flex-shrink: 0; }
+
+button svg, a svg { flex-shrink: 0; }               /* الأيقونات ما تنضغط */
 a { color: inherit; text-decoration: none; }
 h1, h2, h3, p { margin: 0; }
-html { scroll-behavior: smooth; scroll-padding-top: 30px; }
+html { scroll-behavior: smooth; scroll-padding-top: 30px; }   /* تمرير ناعم عند الضغط على روابط القائمة */
+
+/* الحاوية: تحدد عرض المحتوى وتوسطه */
 .container { width: min(1240px, calc(100% - 112px)); margin-inline: auto; }
+
+
+/* ==========================================================================
+   [3] الهيدر (الشريط العلوي) والشعار والقائمة
+   ========================================================================== */
+
 .hero-shell { overflow: hidden; background: #fbf7f2; }
+
+/* الشريط العلوي الثابت */
 .site-header { position: sticky; top: 0; height: 96px; z-index: 30; background: #eee0d5eF; backdrop-filter: blur(10px); }
 .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 35px; }
-.mobile-home-link { display: none; }
+.mobile-home-link { display: none; }                /* رابط "الرئيسية" (يظهر بالجوال فقط) */
+
+/* الشعار + اسم المجمع */
 .brand { display: flex; align-items: center; gap: 11px; flex-shrink: 0; }
 .brand img { object-fit: cover; object-position: 53% center; mix-blend-mode: multiply; height: 70px; width: 70px; }
 .brand strong { display: block; font-size: 23px; font-weight: 500; line-height: 1.45; letter-spacing: -.6px; }
 .brand small { display: block; color: #8d7463; font-size: 10px; letter-spacing: .6px; margin-top: 2px; }
 .brand small span { padding-inline: 7px; font-size: 6px; vertical-align: middle; }
+
+/* قائمة التنقل */
 nav { display: flex; align-items: center; gap: 29px; }
 nav a, nav button { padding: 12px 0; background: transparent; font-size: 12px; font-weight: 450; white-space: nowrap; position: relative; }
+/* الخط اللي يظهر تحت الرابط النشط أو عند التمرير عليه */
 nav a::after { content: ''; position: absolute; bottom: 3px; height: 1px; background: var(--brown); right: 0; width: 0; transition: width .2s; }
 nav a.active::after, nav a:hover::after { width: 100%; }
 nav button:hover { color: #ab7e5b; }
+
+
+/* ==========================================================================
+   [4] الأزرار العامة
+   ========================================================================== */
+
 .button { border-radius: 30px; display: inline-flex; justify-content: center; align-items: center; gap: 11px; padding: 13px 24px; min-height: 47px; font-size: 12px; font-weight: 450; white-space: nowrap; }
+/* الزر البني الرئيسي */
 .primary { color: #fff8f1; background: var(--brown); box-shadow: 0 3px 6px #5b37200b; }
 .primary:hover { background: #6b4530; transform: translateY(-2px); box-shadow: 0 5px 17px #4a2d201a; }
-.header-book { min-height: 40px; padding: 10px 19px; font-size: 11px; }
+.header-book { min-height: 40px; padding: 10px 19px; font-size: 11px; }   /* زر "احجزي موعدك" بالهيدر */
+
+
+/* ==========================================================================
+   [5] قسم الواجهة الرئيسية (Hero)
+   ========================================================================== */
+
 .hero { background: #eee0d5; position: relative; height: 480px; isolation: isolate; }
+
+/* صورة الواجهة (على اليسار) */
 .hero-art { position: absolute; left: 0; top: -4px; bottom: 0; width: 57%; overflow: hidden; z-index: -1; }
 .hero-art>img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; filter: sepia(.28) saturate(.65) brightness(1.03); }
+/* تدرج لوني فوق الصورة يخليها تذوب مع الخلفية */
 .hero-art-shade { position: absolute; inset: 0; background: linear-gradient(270deg, #eee0d5 0%, #eee0d5d6 9%, #eee0d500 39%), linear-gradient(0deg, #a5754f1c, #d9ac9220); }
+
+/* النص (على اليمين) */
 .hero-inner { height: 100%; display: flex; align-items: center; position: relative; }
 .hero-copy { width: 53%; padding-bottom: 13px; }
 .eyebrow { display: flex; align-items: center; gap: 9px; font-size: 11px; color: #99765c; font-weight: 450; }
 .eyebrow>span:empty { width: 24px; height: 1px; background: #b68e6a; }
 .hero h1 { font-size: clamp(47px, 4.6vw, 65px); font-weight: 450; line-height: 1.42; letter-spacing: -1.8px; margin-top: 20px; color: #482d20; }
-.hero h1 em { color: #9d7556; font-style: normal; }
+.hero h1 em { color: #9d7556; font-style: normal; }      /* كلمة "أمينة" الملونة */
 .hero-copy>p { font-size: 15px; color: #856c59; line-height: 1.9; margin-top: 18px; }
 .hero-actions { display: flex; align-items: center; gap: 23px; margin-top: 26px; }
 .hero-actions .primary { padding-inline: 24px; }
 .hero-actions .primary svg:last-child { margin-right: 8px; }
+.hero-footnote { display: flex; align-items: center; gap: 8px; font-size: 9px; color: #9e856e; margin-top: 23px; }
+.hero-footnote i { height: 3px; width: 3px; border-radius: 50%; background: #bc9d83; margin-inline: 4px; }   /* النقاط الفاصلة */
+.hero-vertical { position: absolute; left: 24px; top: 100px; color: #fff6ecab; font-family: Georgia, serif; font-size: 9px; letter-spacing: 4px; writing-mode: vertical-rl; }   /* نص EMOTIONS AND BEAUTY العمودي */
+
+/* [غير مستخدم حالياً] زر الجولة وتسمية الصورة */
 .tour-button { background: none; display: flex; align-items: center; gap: 9px; color: #6e5542; font-size: 11px; padding: 0; }
 .tour-button>span { width: 31px; height: 31px; border: 1px solid #b49b84; border-radius: 50%; display: grid; place-items: center; }
 .tour-button:hover { color: #a17653; }
-.hero-footnote { display: flex; align-items: center; gap: 8px; font-size: 9px; color: #9e856e; margin-top: 23px; }
-.hero-footnote i { height: 3px; width: 3px; border-radius: 50%; background: #bc9d83; margin-inline: 4px; }
-.hero-vertical { position: absolute; left: 24px; top: 100px; color: #fff6ecab; font-family: Georgia, serif; font-size: 9px; letter-spacing: 4px; writing-mode: vertical-rl; }
 .hero-image-label { position: absolute; bottom: 24px; left: 55px; font-size: 10px; color: #fff7ef; display: flex; gap: 8px; align-items: center; text-shadow: 0 1px 5px #0004; }
 .hero-image-label>span { height: 1px; width: 25px; background: #fff8; }
+
+
+/* ==========================================================================
+   [6] قسم الخدمات: العناوين + سلايدر الكروت (في الصفحة الرئيسية)
+   ========================================================================== */
+
 .services-section { background: linear-gradient(180deg, #fbf5ef, #fbf7f2); padding: 37px 0 29px; }
+
+/* عنوان القسم (مثل: أبرز خدماتنا وأسعارها) */
 .section-title { text-align: center; margin-bottom: 25px; }
 .section-kicker { font-size: 9px; color: #b18c6c; letter-spacing: .5px; }
 .section-title h2 { font-size: 27px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 24px; line-height: 1.7; }
-.section-title h2>span { width: 65px; height: 1px; background: linear-gradient(90deg, #d6b89b, #ddc5ae66); }
+.section-title h2>span { width: 65px; height: 1px; background: linear-gradient(90deg, #d6b89b, #ddc5ae66); }   /* الخطوط الجانبية للعنوان */
 .section-title h2>span:last-child { transform: rotate(180deg); }
 .section-title p { font-size: 11px; color: #a18b79; margin-top: 3px; }
+
+/* السلايدر: الشريط اللي تنسحب عليه الكروت */
 .carousel { position: relative; }
 .service-track { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 2px; cursor: grab; touch-action: pan-x pan-y; }
 .service-track::-webkit-scrollbar { display: none; }
 .service-track.dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+
+/* كرت الخدمة داخل السلايدر (5 كروت بالصف على الكمبيوتر) */
 .treatment-card { flex: 0 0 calc((100% - 72px) / 5); min-width: 0; border: 1px solid #f0e5db; border-radius: 12px; overflow: hidden; background: #f1e6dc; scroll-snap-align: start; transition: border-color .2s, box-shadow .2s; }
 .treatment-card:hover { border-color: #cfb399; box-shadow: 0 5px 17px #603e200a; }
 .treatment-photo { height: 156px; position: relative; background: #ddc8b5; }
 .treatment-photo>img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; user-select: none; filter: saturate(.75); }
+/* ضبط موضع الصورة لخدمات معينة */
 .treatment-filler>img, .treatment-lip-glam>img { object-position: 45% 61%; }
 .treatment-plasma>img, .treatment-profhilo>img { object-position: 65% 25%; }
+/* الدائرة الصغيرة اللي تحت الصورة (أيقونة الخدمة) */
 .treatment-symbol { position: absolute; bottom: -16px; left: 13px; height: 35px; width: 35px; background: #f7eee5; border: 1px solid #dfcbbb; border-radius: 50%; display: grid; place-items: center; color: #9c7a60; box-shadow: 0 2px 4px #4a2d2008; }
-.card-label { position: absolute; top: 10px; right: 10px; font-size: 8px; border-radius: 20px; padding: 4px 9px; background: #f8ede4e6; color: #805c42; backdrop-filter: blur(5px); }
+.card-label { position: absolute; top: 10px; right: 10px; font-size: 8px; border-radius: 20px; padding: 4px 9px; background: #f8ede4e6; color: #805c42; backdrop-filter: blur(5px); }   /* شارة "عناية مختارة" */
+/* محتوى الكرت: الاسم + الوصف + السعر + زر الحجز */
 .treatment-content { text-align: center; padding: 19px 13px 14px; }
 .treatment-content h3 { font-size: 15px; font-weight: 600; color: #563928; min-height: 24px; white-space: nowrap; }
 .treatment-content>p { font-size: 9px; color: #987c65; line-height: 1.8; margin-top: 2px; white-space: nowrap; }
@@ -98,32 +188,50 @@ nav button:hover { color: #ab7e5b; }
 .treatment-price .consult-price { font-size: 11px; margin-top: 5px; }
 .treatment-content>button { display: flex; justify-content: center; align-items: center; gap: 20px; color: #fbf1e7; background: var(--brown); border-radius: 25px; padding: 8px 12px; font-size: 10px; width: 100%; }
 .treatment-content>button:hover { background: #775237; }
+
+/* أسهم السلايدر (يمين ويسار) */
 .carousel-arrow { width: 35px; height: 35px; border-radius: 50%; display: grid; place-items: center; color: #805d43; background: #ead9cb; position: absolute; top: 43%; z-index: 1; box-shadow: 0 2px 7px #603c1410; }
 .carousel-arrow:hover { background: #d9bea6; }
 .carousel-arrow:disabled { opacity: .4; }
 .arrow-right { right: -47px; }
 .arrow-right svg { transform: rotate(180deg); }
 .arrow-left { left: -47px; }
+
+/* الشريط تحت السلايدر: النص + النقاط + "اسحبي" */
 .carousel-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
 .carousel-bottom>span { color: #b09a87; font-size: 8px; width: 220px; }
 .carousel-bottom>.swipe-hint { display: flex; align-items: center; gap: 7px; justify-content: flex-end; }
 .carousel-dots { display: flex; align-items: center; gap: 7px; min-height: 15px; }
 .carousel-dots button { width: 6px; height: 6px; border-radius: 50%; background: #dfcbb9; padding: 0; position: relative; }
-.carousel-dots button::after { content: ''; position: absolute; inset: -8px; }
-.carousel-dots button.active { background: #62422b; width: 18px; border-radius: 6px; }
+.carousel-dots button::after { content: ''; position: absolute; inset: -8px; }   /* يكبّر منطقة اللمس */
+.carousel-dots button.active { background: #62422b; width: 18px; border-radius: 6px; }   /* النقطة النشطة */
+
+/* رابط "استعرضي قائمة الأسعار كاملة" */
 .all-prices-link { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 20px; }
 .all-prices-link>button { display: flex; align-items: center; gap: 10px; background: transparent; font-size: 10px; color: #735033; border-bottom: 1px solid #cdb39b; padding: 0 0 5px; }
 .all-prices-link>button:hover { color: #b17e52; }
 .all-prices-link>span { color: #b09a87; font-size: 8px; border-right: 1px solid #deccbb; padding-right: 14px; }
+
+
+/* ==========================================================================
+   [7] كروت أقسام الليزر والتشقير (تحت السلايدر)
+   ========================================================================== */
+
 .service-category-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
 .service-category-card { min-height: 190px; display: grid; grid-template-columns: 42% 58%; overflow: hidden; border: 1px solid #eaded2; border-radius: 13px; background: #fffaf5; }
 .service-category-card>img, .whitening-placeholder { width: 100%; height: 100%; min-height: 190px; object-fit: cover; filter: saturate(.75); }
-.whitening-placeholder { display: grid; place-items: center; background: linear-gradient(145deg, #ead9c8, #f7eee5); color: #a27a56; }
+.whitening-placeholder { display: grid; place-items: center; background: linear-gradient(145deg, #ead9c8, #f7eee5); color: #a27a56; }   /* مكان صورة التشقير (مؤقت) */
 .service-category-card>div:last-child { padding: 24px 20px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 .service-category-card>div:last-child>span { font-size: 9px; color: #b08a67; }
 .service-category-card h3 { font-size: 20px; font-weight: 500; margin-top: 5px; }
 .service-category-card p { font-size: 10px; line-height: 1.8; color: #9a8270; margin-top: 5px; }
 .service-category-card button { display: flex; align-items: center; gap: 8px; margin-top: 14px; background: transparent; color: #75553d; border-bottom: 1px solid #cdb39b; padding: 0 0 5px; font-size: 10px; }
+
+
+/* ==========================================================================
+   [8] بانر العناية ("تفاصيل مدروسة، لجمال يشبهكِ")
+   ========================================================================== */
+
 .care-banner { background: linear-gradient(105deg, #d5b59a, #ebd5c2 55%, #e2c6b0); border: 1px solid #e7d3c0; border-radius: 12px; min-height: 111px; padding: 24px 40px; position: relative; display: flex; align-items: center; gap: 35px; overflow: hidden; isolation: isolate; }
 .banner-copy { display: flex; gap: 17px; align-items: center; }
 .banner-copy>svg { color: #9c6f4a; }
@@ -133,8 +241,16 @@ nav button:hover { color: #ab7e5b; }
 .care-banner>p { color: #947051; font-size: 11px; line-height: 1.9; }
 .care-banner>p strong { color: #6a482e; font-weight: 500; }
 .care-banner .button { margin-right: auto; font-size: 11px; min-height: 42px; padding: 10px 23px; }
-.banner-decoration { position: absolute; width: 270px; height: 270px; border: 1px solid #fff6; border-radius: 50%; left: -100px; top: -170px; z-index: -1; box-shadow: 0 0 0 15px #fff1, 0 0 0 30px #fff1, 0 0 0 45px #fff1, 0 0 0 60px #fff1; }
+.banner-decoration { position: absolute; width: 270px; height: 270px; border: 1px solid #fff6; border-radius: 50%; left: -100px; top: -170px; z-index: -1; box-shadow: 0 0 0 15px #fff1, 0 0 0 30px #fff1, 0 0 0 45px #fff1, 0 0 0 60px #fff1; }   /* الدوائر الزخرفية */
+
+
+/* ==========================================================================
+   [9] قسم إنديبا INDIBA
+   ========================================================================== */
+
 .indiba-section { margin-block: 54px 42px; background: #fbf7f2; border-block: 1px solid #dfcbb8; padding-block: 48px; }
+
+/* [غير مستخدم حالياً] تصميم إنديبا القديم */
 .indiba-grid { display: grid; grid-template-columns: 1fr; max-width: 820px; }
 .indiba-copy { text-align: center; }
 .indiba-copy h2 { font-size: 43px; line-height: 1.25; font-weight: 500; color: #4a3021; margin-top: 11px; }
@@ -148,10 +264,13 @@ nav button:hover { color: #ab7e5b; }
 .indiba-actions { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 22px; }
 .indiba-actions .button { min-height: 43px; font-size: 11px; }
 .indiba-actions>strong { font-size: 10px; color: #9a795d; line-height: 1.8; }
+
+/* التصميم الحالي المستخدم (Showcase) */
 .indiba-showcase { border: 1px solid #dfcbb8; border-radius: 14px; background: #ede0d3; }
 .indiba-showcase .section-title { margin-bottom: 22px; }
 .indiba-showcase .section-title h2 em { color: #a27b5b; font-size: 16px; font-style: normal; letter-spacing: 1px; }
-.indiba-showcase-grid { display: grid; grid-template-columns: 1.45fr .55fr; gap: 26px; align-items: stretch; }
+.indiba-showcase-grid { display: grid; grid-template-columns: 1.45fr .55fr; gap: 26px; align-items: stretch; }   /* الكرت الكبير + كرت "حصرياً" */
+/* الكرت الكبير (المميزات) */
 .indiba-main-card { border: 1px solid #eaded2; border-radius: 14px; background: #fffaf5; padding: 28px 30px; }
 .indiba-card-kicker { font-size: 9px; color: #b08a67; }
 .indiba-main-card h3 { max-width: 560px; font-size: 24px; line-height: 1.55; font-weight: 500; margin-top: 8px; color: #694930; }
@@ -160,12 +279,19 @@ nav button:hover { color: #ab7e5b; }
 .indiba-benefit { min-height: 42px; display: flex; align-items: center; gap: 9px; border: 1px solid #e8dacb; border-radius: 8px; background: #faf4ed; padding: 7px 9px; }
 .indiba-benefit>span { width: 24px; height: 24px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%; background: #dfcbb7; color: #805d43; }
 .indiba-benefit strong { font-size: 10px; font-weight: 500; color: #765740; }
+/* كرت "حصرياً شمال المملكة" */
 .indiba-exclusive-card { border-radius: 14px; background: linear-gradient(145deg, #ede0d3, #f7efe6); padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 .indiba-exclusive-mark { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: #dec5af; color: #805d43; margin-bottom: 14px; }
 .indiba-exclusive-card>span { font-size: 9px; color: #b08a67; }
 .indiba-exclusive-card h3 { font-size: 24px; line-height: 1.5; font-weight: 500; margin-top: 4px; color: #694930; }
 .indiba-exclusive-card p { font-size: 11px; line-height: 2; color: #927759; margin-top: 10px; }
 .indiba-exclusive-card>strong { font-size: 10px; line-height: 1.9; color: #805d43; margin-top: 16px; }
+
+
+/* ==========================================================================
+   [10] قبل وبعد  (غير مستخدم حالياً بالموقع، آمن تحذفه)
+   ========================================================================== */
+
 .before-after-section { padding-block: 52px 72px; }
 .before-after-grid { display: grid; grid-template-columns: 1.45fr .55fr; gap: 26px; align-items: stretch; }
 .before-after-card { border: 1px solid #eaded2; border-radius: 14px; overflow: hidden; background: #fffaf5; }
@@ -189,35 +315,58 @@ nav button:hover { color: #ab7e5b; }
 .before-after-note>p { font-size: 11px; line-height: 2; color: #927559; margin-top: 12px; }
 .before-after-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 .before-after-badges>span { display: flex; align-items: center; gap: 7px; border: 1px solid #dac5ae; border-radius: 20px; padding: 7px 10px; font-size: 9px; color: #806248; }
+
+
+/* ==========================================================================
+   [11] صفحة الأسعار /prices
+   ========================================================================== */
+
+/* شريط الصفحة العلوي (زر الرئيسية + اسم المجمع) */
 .prices-header { height: 48px; background: #eee0d5; }
 .prices-header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; }
 .prices-brand-name { position: absolute; left: 50%; transform: translateX(-50%); color: #745640; font-size: 14px; font-weight: 500; white-space: nowrap; }
 .prices-back { display: flex; align-items: center; gap: 8px; background: transparent; color: #745640; font-size: 12px; }
 .prices-back svg { transform: rotate(180deg); }
+
+/* [غير مستخدم حالياً] عنوان كبير قديم للصفحة */
 .prices-hero { background: #eee0d5; padding: 68px 0 76px; text-align: right; }
 .prices-hero h1 { font-size: 48px; font-weight: 500; margin-top: 14px; color: #4a3021; }
 .prices-hero p { color: #947d69; font-size: 14px; margin-top: 10px; }
+
+/* منطقة البحث والفلاتر + شبكة الكروت */
 .prices-catalog { padding-block: 24px 70px; }
 .prices-toolbar { display: grid; grid-template-columns: 300px 1fr; align-items: center; gap: 18px; margin-bottom: 28px; }
 .prices-toolbar .search-field { margin-top: 0; }
 .prices-toolbar .price-filters { justify-content: flex-end; margin: 0; }
+
+/* الشبكة: 4 كروت بالصف على الكمبيوتر (تتغير بالتابلت والجوال تحت بقسم [15]) */
 .prices-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+
+/* كرت الخدمة في صفحة الأسعار */
 .price-card { overflow: hidden; border: 1px solid #eaded2; border-radius: 13px; background: #fffaf5; transition: transform .2s, box-shadow .2s; }
 .price-card:hover { transform: translateY(-3px); box-shadow: 0 12px 25px #60401f10; }
-.price-card-image { aspect-ratio: 1.25 / 1; height: auto; position: relative; background: #f7efe7; }
+.price-card-image { aspect-ratio: 1.25 / 1; height: auto; position: relative; background: #f7efe7; }   /* نسبة الصورة */
 .price-card-image img { width: 100%; height: 100%; object-fit: cover; object-position: center; filter: saturate(.72); }
-.price-card-image>span { position: absolute; top: 13px; right: 13px; border-radius: 20px; background: #fffaf1e9; color: #7d5d44; font-size: 9px; padding: 6px 11px; }
+.price-card-image>span { position: absolute; top: 13px; right: 13px; border-radius: 20px; background: #fffaf1e9; color: #7d5d44; font-size: 9px; padding: 6px 11px; }   /* شارة القسم فوق الصورة */
 .price-card-content { padding: 10px 12px; }
-.price-card-content h2 { min-height: 36px; font-size: 13px; font-weight: 600; line-height: 1.4; }
-.price-card-content>p { min-height: 36px; color: #a08976; font-size: 10px; line-height: 1.8; }
-.price-card-bottom { border-top: 1px solid #eee1d5; margin-top: 13px; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.price-card-content h2 { min-height: 36px; font-size: 13px; font-weight: 600; line-height: 1.4; }   /* اسم الخدمة */
+.price-card-content>p { min-height: 36px; color: #a08976; font-size: 10px; line-height: 1.8; }   /* وصف الخدمة */
+.price-card-bottom { border-top: 1px solid #eee1d5; margin-top: 13px; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }   /* السعر + زر الاستفسار */
 .price-card-bottom>strong { color: #573b29; font-size: 20px; font-weight: 500; }
 .price-card-bottom>strong small { font-size: 9px; color: #a98c74; }
 .price-card-bottom>.price-consult { font-size: 11px; }
 .price-card-action { display: flex; align-items: center; gap: 7px; background: #5b3b28; color: #fff8f1; border-radius: 22px; padding: 9px 12px; font-size: 10px; }
 .price-card-action svg { transform: rotate(180deg); }
+
+/* رسالة "ما لقينا خدمة" + الملاحظة الصغيرة تحت */
 .prices-empty { grid-column: 1 / -1; text-align: center; padding: 70px 20px; color: #9a8775; border: 1px dashed #dccbb9; border-radius: 12px; }
 .prices-fine-print { text-align: center; color: #a18d78; font-size: 10px; margin-top: 24px; }
+
+
+/* ==========================================================================
+   [12] قسم عن المجمع
+   ========================================================================== */
+
 .about-section { display: grid; grid-template-columns: .95fr 1fr; gap: 95px; padding-block: 76px; align-items: center; }
 .about-copy h2 { margin-top: 15px; font-size: 30px; font-weight: 450; line-height: 1.7; }
 .about-copy h2 em { color: #aa8263; font-style: normal; }
@@ -230,37 +379,57 @@ nav button:hover { color: #ab7e5b; }
 .about-image>img { height: 100%; width: 100%; object-fit: cover; }
 .about-image-caption { position: absolute; bottom: 13px; left: 13px; right: 13px; border-radius: 7px; background: #fff9f0e8; backdrop-filter: blur(5px); padding: 12px; color: #937356; display: flex; align-items: center; gap: 7px; font-size: 10px; }
 .about-image-caption>span:last-child { margin-right: auto; font-size: 6px; letter-spacing: 1.3px; }
+
+
+/* ==========================================================================
+   [13] قسم التواصل والفوتر
+   ========================================================================== */
+
 .contact-section { border-block: 1px solid #e9ddcf; background: #f3eae0; padding-block: 36px; }
 .contact-inner { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
 .contact-inner h2 { font-size: 26px; font-weight: 450; margin-top: 8px; color: #694930; }
 .contact-inner p { font-size: 10px; color: #a28b75; margin-top: 7px; }
 .contact-buttons { display: flex; gap: 12px; align-items: center; }
 .contact-buttons .button { font-size: 11px; min-height: 43px; padding: 12px 21px; }
-.outlined { background: transparent; border: 1px solid #cbb29c; color: #876447; }
+.outlined { background: transparent; border: 1px solid #cbb29c; color: #876447; }   /* زر الخريطة (إطار فقط) */
 .outlined:hover { background: #e8d9ca; }
+.whatsapp-button { background: #f3eae0; border: 1px solid #dfcbb8; color: #745640; }
+.whatsapp-button:hover { background: #e8d9ca; }
+
+/* الفوتر */
 .site-footer { background: #fbf7f2; }
 .footer-inner { display: flex; align-items: center; justify-content: center; min-height: 64px; padding-block: 16px; }
 .footer-copyright { text-align: center; }
-.whatsapp-button { background: #f3eae0; border: 1px solid #dfcbb8; color: #745640; }
-.whatsapp-button:hover { background: #e8d9ca; }
 .site-footer .brand img { height: 39px; width: 39px; }
 .site-footer .brand strong { font-size: 17px; }
 .site-footer .brand small { font-size: 8px; }
 .footer-inner>span { font-size: 9px; color: #ac9580; display: flex; align-items: center; gap: 8px; }
+
+
+/* ==========================================================================
+   [14] النوافذ المنبثقة (Modal): الحجز + الجولة
+   ========================================================================== */
+
 .modal { width: min(480px, calc(100% - 32px)); padding: 0; margin: auto; border-radius: 19px; border: 1px solid #e2cfbd; color: var(--ink); background: #fcf8f3; max-height: 88dvh; box-shadow: 0 25px 80px #38201433; }
-.modal::backdrop { background: #32201477; backdrop-filter: blur(5px); }
+.modal::backdrop { background: #32201477; backdrop-filter: blur(5px); }   /* الخلفية المعتمة خلف النافذة */
 .modal-content { padding: 34px; position: relative; }
 .close-button { position: absolute; top: 14px; left: 14px; background: #f0e5d9; border-radius: 50%; color: #88684b; width: 30px; height: 30px; display: grid; place-items: center; }
 .close-button:hover { background: #e6d3c0; }
 .modal h2 { font-size: 27px; font-weight: 500; margin-top: 10px; }
 .modal-content>p { color: #a28a75; font-size: 12px; line-height: 2; margin-top: 9px; }
 .price-modal { width: min(650px, calc(100% - 32px)); }
+
+/* حقل البحث (يُستخدم بصفحة الأسعار والنافذة) */
 .search-field { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border: 1px solid #e5d6c5; background: #fffaf5; border-radius: 9px; margin-top: 19px; color: #b4977d; }
 .search-field input { min-width: 0; width: 100%; font-size: 12px; background: none; border: 0; color: var(--ink); outline: none; }
 .search-field:focus-within { border-color: #a67c56; }
+
+/* أزرار الفلاتر (كل الخدمات / قسم الحقن ...) */
 .price-filters { display: flex; gap: 8px; margin-block: 14px; }
 .price-filters button { padding: 7px 14px; background: #f3e9df; color: #95775b; border-radius: 18px; font-size: 11px; }
-.price-filters button.selected { background: var(--brown); color: white; }
+.price-filters button.selected { background: var(--brown); color: white; }   /* الفلتر المختار */
+
+/* جدول الأسعار داخل النافذة */
 .price-table { max-height: 41dvh; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #cfb49a #f7eee5; padding-left: 5px; }
 .price-table-heading, .price-row { display: grid; grid-template-columns: 1fr 85px 30px; align-items: center; gap: 12px; }
 .price-table-heading { background: #eee1d3; padding: 9px 13px; font-size: 10px; color: #a48669; position: sticky; top: 0; z-index: 1; border-radius: 6px; }
@@ -271,6 +440,8 @@ nav button:hover { color: #ab7e5b; }
 .price-row>button:hover { background: var(--brown); color: white; }
 .modal-content>.fine-print { font-size: 10px; margin-top: 14px; }
 .empty-state { color: #a18b76; font-size: 12px; padding: 30px; text-align: center; }
+
+/* نافذة الحجز: ملخص الخدمة + الموقع + التواصل */
 .booking-summary { display: flex; align-items: center; gap: 17px; border: 1px solid #e8d8c7; border-radius: 10px; background: #f4e9dd; margin-top: 23px; overflow: hidden; }
 .booking-summary>img { height: 100px; width: 100px; object-fit: cover; }
 .booking-summary small { font-size: 9px; color: #a28569; }
@@ -283,13 +454,30 @@ nav button:hover { color: #ab7e5b; }
 .booking-note { padding: 16px; background: #f1e8dd; border: 1px solid #e6d7c5; border-radius: 10px; margin-top: 20px; }
 .booking-note strong { font-size: 12px; font-weight: 500; }
 .booking-note p { font-size: 10px; color: #a0876e; line-height: 1.9; margin-top: 6px; }
-.booking-contact-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.booking-contact-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }   /* واتساب + هاتف جنب بعض */
 .booking-contact-links a { min-height: 42px; border: 1px solid #d8c6b3; border-radius: 8px; background: #fcf8f3; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; color: #745540; }
 .booking-contact-links a:hover { background: #f3eae0; border-color: #dfcbb8; }
 .full-width { width: 100%; margin-top: 20px; }
+
+/* نافذة الجولة */
 .tour-modal { width: min(800px, calc(100% - 32px)); }
 .tour-photo { display: block; border-radius: 10px; width: 100%; max-height: 50dvh; object-fit: cover; margin-block: 20px; }
+
+
+/* ==========================================================================
+   [15] التجاوب مع الشاشات
+   --------------------------------------------------------------------------
+   كل قسم أدناه يغيّر التصميم لحجم شاشة معين:
+   - 1600px وفوق : شاشات كبيرة جداً
+   - 1150px وأقل : لابتوب صغير
+   - 900px وأقل  : تابلت
+   - 600px وأقل  : جوال  <-- هنا تعديل الكروت (كرتين جنب بعض)
+   ========================================================================== */
+
+/* ---------- شاشات كبيرة جداً ---------- */
 @media(min-width:1600px) { .hero { height: 530px; } }
+
+/* ---------- لابتوب صغير (1150px وأقل) ---------- */
 @media(max-width:1150px) {
   .container { width: calc(100% - 88px); }
   nav { gap: 21px; }
@@ -299,7 +487,7 @@ nav button:hover { color: #ab7e5b; }
   .hero { height: 455px; }
   .hero h1 { font-size: 52px; }
   .hero-copy>p { font-size: 14px; }
-  .treatment-card { flex-basis: calc((100% - 54px) / 4); }
+  .treatment-card { flex-basis: calc((100% - 54px) / 4); }   /* 4 كروت بالسلايدر */
   .treatment-photo { height: 160px; }
   .arrow-left { left: -39px; }
   .arrow-right { right: -39px; }
@@ -307,9 +495,11 @@ nav button:hover { color: #ab7e5b; }
   .care-banner { padding-inline: 27px; gap: 25px; }
   .banner-copy h2 { font-size: 19px; }
   .contact-buttons .button { padding-inline: 16px; font-size: 10px; }
-  .prices-grid { grid-template-columns: repeat(3, 1fr); }
+  .prices-grid { grid-template-columns: repeat(3, 1fr); }    /* صفحة الأسعار: 3 كروت */
   .prices-toolbar { grid-template-columns: 260px 1fr; }
 }
+
+/* ---------- تابلت (900px وأقل) ---------- */
 @media(max-width:900px) {
   .container { width: calc(100% - 70px); }
   .site-header { height: 85px; }
@@ -329,7 +519,7 @@ nav button:hover { color: #ab7e5b; }
   .hero-art-shade { background: linear-gradient(270deg,#eee0d5 0%,#eee0d5d9 15%,#eee0d500 51%); }
   .hero-vertical { left: 12px; font-size: 8px; }
   .hero-image-label { left: 35px; font-size: 8px; }
-  .treatment-card { flex-basis: calc((100% - 36px) / 3); }
+  .treatment-card { flex-basis: calc((100% - 36px) / 3); }   /* 3 كروت بالسلايدر */
   .treatment-photo { height: 168px; }
   .carousel-arrow { width: 29px; height: 29px; }
   .arrow-right { right: -32px; }
@@ -359,13 +549,19 @@ nav button:hover { color: #ab7e5b; }
   .indiba-showcase-grid { grid-template-columns: 1fr; }
   .indiba-exclusive-card { min-height: 250px; }
 }
+
+/* ---------- جوال (600px وأقل) ---------- */
 @media(max-width:600px) {
   .container { width: calc(100% - 40px); }
+
+  /* --- كروت الليزر والتشقير --- */
   .service-category-grid { grid-template-columns: 1fr; gap: 12px; }
   .service-category-card { min-height: 150px; grid-template-columns: 38% 62%; }
   .service-category-card>img, .whitening-placeholder { min-height: 150px; }
   .service-category-card>div:last-child { padding: 18px 14px; }
   .service-category-card h3 { font-size: 17px; }
+
+  /* --- هيدر صفحة الأسعار --- */
   .prices-header { height: 72px; }
   .prices-header-inner { position: relative; justify-content: flex-start; }
   .prices-brand-name { font-size: 16px; }
@@ -376,27 +572,80 @@ nav button:hover { color: #ab7e5b; }
   .prices-catalog { padding-block: 28px 50px; }
   .prices-toolbar { grid-template-columns: 1fr; gap: 12px; }
   .prices-toolbar .price-filters { justify-content: flex-start; flex-wrap: wrap; }
-  .prices-grid { grid-template-columns: 1fr; }
-  .price-card-image { aspect-ratio: 1 / 1; height: auto; }
-  .site-header { height: auto; }
-  .header-inner { flex-direction: column; padding-block: 10px 0; gap: 8px; }
-  .header-inner .brand { position: relative; width: 100%; justify-content: center; }
-  .header-inner .brand img { position: absolute; right: 0; width: 54px; height: 54px; }
-  .header-inner .brand strong { font-size: 20px; text-align: center; }
-  .header-inner .brand small { display: none; }
-  nav { display: none; }
+
+  /* ==========================================================
+     صفحة الأسعار على الجوال: كل كرتين جنب بعض   <-- التعديل الجديد
+     ========================================================== */
+
+  /* الشبكة (الحاوية اللي تجمع الكروت) */
+  .prices-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* عمودين بنفس العرض (كان عمود واحد) */
+    gap: 10px;                                        /* المسافة بين الكروت */
+  }
+
+  /* الكرت نفسه */
+  .price-card { border-radius: 11px; }                /* استدارة الزوايا */
+
+  /* صورة الكرت */
+  .price-card-image {
+    aspect-ratio: 1.1 / 1;                            /* نسبة العرض للطول (كان مربع كبير 1/1). كل ما كبر الرقم الأول صارت الصورة أقصر */
+    height: auto;
+  }
+
+  /* الشارة فوق الصورة (مثل: قسم الحقن) */
+  .price-card-image>span { top: 7px; right: 7px; padding: 4px 8px; font-size: 8px; }
+
+  /* المساحة تحت الصورة (الاسم والوصف والسعر) */
+  .price-card-content { padding: 9px 9px 10px; }
+
+  /* اسم الخدمة */
+  .price-card-content h2 {
+    min-height: 34px;                                 /* يخلي الكروت متساوية حتى لو الاسم سطر واحد */
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  /* وصف الخدمة: يُقص على سطرين فقط */
+  .price-card-content>p {
+    min-height: 0;
+    font-size: 9px;
+    line-height: 1.7;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;                            /* عدد السطور المسموح */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* الجزء السفلي: السعر فوق والزر تحته (لأن عرض الكرت صغير) */
+  .price-card-bottom { flex-direction: column; align-items: stretch; gap: 8px; margin-top: 8px; padding-top: 8px; }
+  .price-card-bottom>strong { font-size: 16px; text-align: center; }
+  .price-card-bottom>strong small { font-size: 8px; }
+  .price-card-bottom>.price-consult { font-size: 10px; }
+  .price-card-action { justify-content: center; padding: 7px 10px; font-size: 10px; }
+
+  /* ========================================================== */
+
+  /* --- الهيدر (الشريط العلوي) على الجوال --- */
+  .site-header { height: 76px; }
+  .header-inner { height: 76px; flex-direction: row; align-items: center; padding-block: 7px; gap: 10px; position: relative; }
+  .header-inner .brand { position: relative; width: auto; justify-content: flex-start; gap: 7px; }
+  .header-inner .brand img { position: static; width: 58px; height: 58px; }
+  .header-inner .brand strong { font-size: 15px; text-align: right; line-height: 1.35; white-space: nowrap; }
+  .header-inner .brand small { display: block; font-size: 7px; margin-top: 1px; }
+  nav { display: none; }                              /* القائمة مخفية بالجوال */
+  .mobile-home-link { display: block; position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; color: #745640; border-bottom: 0; padding: 0; white-space: nowrap; }
+
+  /* --- الواجهة الرئيسية (Hero) --- */
   .hero { height: 510px; }
   .hero-inner { align-items: flex-start; }
-  .hero-copy { width: 100%; padding-top: 2px; }
+  .hero-copy { width: 100%; padding-top: 2px; position: relative; z-index: 2; }
   .hero .eyebrow { font-size: 9px; }
   .hero h1 { font-size: 37px; line-height: 1.25; margin-top: 8px; color: #2f1d13; text-shadow: 0 1px 8px #fff8, 0 2px 14px #fff6; }
   .hero h1 em { color: #8e6547; }
-  .hero-copy>p { color: #51382a; text-shadow: 0 1px 7px #fff9; }
-  .hero-copy>p { font-size: 12px; margin-top: 13px; line-height: 1.9; max-width: 250px; }
-  .hero-art { width: 100%; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; }
+  .hero-copy>p { color: #51382a; text-shadow: 0 1px 7px #fff9; font-size: 12px; margin-top: 13px; line-height: 1.9; max-width: 250px; }
+  .hero-art { width: 100%; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; }   /* الصورة تغطي كامل الواجهة */
   .hero-art>img { object-position: 45% 42%; filter: sepia(.12) saturate(.82) brightness(1.08); }
   .hero-art-shade { background: linear-gradient(180deg,#eee0d5a8 0%,#eee0d566 12%,#eee0d500 44%),linear-gradient(270deg,#eee0d577 0%,#eee0d500 48%); }
-  .hero-copy { position: relative; z-index: 2; }
   .hero-actions { position: absolute; right: 20px; top: 430px; bottom: auto; z-index: 3; margin: 0; gap: 15px; flex-direction: column; align-items: flex-end; }
   .hero-actions .primary { font-size: 11px; padding: 12px 18px; min-height: 43px; }
   .tour-button { font-size: 10px; gap: 7px; }
@@ -406,6 +655,8 @@ nav button:hover { color: #ab7e5b; }
   .hero-image-label { bottom: 23px; left: 20px; font-size: 7px; }
   .hero-image-label>span { display: none; }
   .hero-vertical { top: 330px; left: 12px; font-size: 7px; }
+
+  /* --- قسم الخدمات + السلايدر --- */
   .services-section { padding-top: 27px; padding-bottom: 25px; }
   .section-title { margin-bottom: 21px; }
   .section-title h2 { font-size: 23px; gap: 13px; margin-top: 3px; }
@@ -413,7 +664,7 @@ nav button:hover { color: #ab7e5b; }
   .section-title p { font-size: 10px; }
   .section-kicker { font-size: 8px; }
   .service-track { gap: 12px; margin-left: -20px; padding-left: 20px; scroll-padding-right: 0; }
-  .treatment-card { flex-basis: 64%; max-width: 245px; }
+  .treatment-card { flex-basis: 64%; max-width: 245px; }    /* كرت واحد وجزء من اللي بعده */
   .treatment-photo { height: 150px; }
   .treatment-content { padding: 16px 13px 12px; }
   .treatment-content h3 { font-size: 14px; }
@@ -433,6 +684,8 @@ nav button:hover { color: #ab7e5b; }
   .all-prices-link { margin-top: 24px; gap: 10px; }
   .all-prices-link>button { font-size: 10px; gap: 7px; }
   .all-prices-link>span { font-size: 7px; padding-right: 10px; }
+
+  /* --- قبل وبعد (غير مستخدم) --- */
   .before-after-section { padding-block: 38px 50px; }
   .before-after-grid { gap: 16px; }
   .before-after-image { height: 280px; }
@@ -440,12 +693,16 @@ nav button:hover { color: #ab7e5b; }
   .before-after-copy h3 { font-size: 15px; }
   .before-after-note { padding: 24px 20px; min-height: 250px; }
   .before-after-note h3 { font-size: 21px; }
+
+  /* --- بانر العناية --- */
   .care-banner { padding: 24px; min-height: 152px; flex-wrap: wrap; gap: 17px; }
   .banner-copy { width: 100%; gap: 12px; }
   .banner-copy h2 { font-size: 20px; }
   .banner-copy span { font-size: 9px; }
   .banner-divider { display: none; }
   .care-banner .button { margin-right: 35px; min-height: 37px; padding: 9px 18px; font-size: 10px; }
+
+  /* --- إنديبا --- */
   .indiba-section { margin-block: 34px 24px; padding-block: 30px; }
   .indiba-copy h2 { font-size: 36px; }
   .indiba-copy h2 em { font-size: 14px; }
@@ -462,6 +719,8 @@ nav button:hover { color: #ab7e5b; }
   .indiba-benefit-grid { grid-template-columns: 1fr; gap: 7px; }
   .indiba-benefit { min-height: 38px; }
   .indiba-exclusive-card { min-height: 230px; padding: 24px 20px; }
+
+  /* --- عن المجمع --- */
   .about-section { padding-block: 40px; grid-template-columns: 1fr; gap: 27px; }
   .about-copy h2 { font-size: 28px; margin-top: 13px; }
   .about-copy>p { max-width: none; font-size: 12px; margin-top: 13px; }
@@ -470,6 +729,8 @@ nav button:hover { color: #ab7e5b; }
   .underlined-link { margin-top: 20px; }
   .about-image { height: 245px; }
   .about-image-caption>span:last-child { display: initial; font-size: 6px; }
+
+  /* --- التواصل والفوتر --- */
   .contact-section { padding-block: 29px; }
   .contact-inner h2 { font-size: 25px; }
   .contact-inner p { font-size: 10px; line-height: 1.9; max-width: 300px; }
@@ -479,6 +740,8 @@ nav button:hover { color: #ab7e5b; }
   .footer-inner { min-height: 58px; padding-block: 16px; }
   .footer-inner>span { font-size: 8px; }
   .site-footer .brand strong { font-size: 17px; }
+
+  /* --- النوافذ المنبثقة --- */
   .modal-content { padding: 30px 22px; }
   .modal h2 { font-size: 25px; }
   .price-row, .price-table-heading { grid-template-columns: 1fr 65px 25px; padding-inline: 8px; gap: 8px; }
@@ -487,14 +750,26 @@ nav button:hover { color: #ab7e5b; }
   .price-row>strong { font-size: 13px; }
   .price-filters button { font-size: 10px; padding-inline: 12px; }
   .price-table { max-height: 40dvh; }
-  .site-header { height: 76px; }
-  .header-inner { height: 76px; flex-direction: row; align-items: center; padding-block: 7px; gap: 10px; }
-  .header-inner .brand { width: auto; justify-content: flex-start; gap: 7px; }
-  .header-inner .brand img { position: static; width: 58px; height: 58px; }
-  .header-inner .brand strong { font-size: 15px; text-align: right; line-height: 1.35; white-space: nowrap; }
-  .header-inner .brand small { display: block; font-size: 7px; margin-top: 1px; }
-  nav { display: none; }
-  .header-inner { position: relative; }
-  .mobile-home-link { display: block; position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; color: #745640; border-bottom: 0; padding: 0; white-space: nowrap; }
 }
+/* ==========================================================
+   تثبيت ارتفاع كروت الليزر والتشقير (حتى لو الصورة طويلة)
+   ========================================================== */
+
+/* الكمبيوتر والتابلت */
+.service-category-card {
+  height: 190px;                         /* ارتفاع ثابت للكرت */
+  grid-template-rows: minmax(0, 1fr);    /* الصف ياخذ ارتفاع الكرت فقط، ولا يتمدد مع الصورة */
+}
+.service-category-card>img {
+  height: 100%;
+  min-height: 0;                         /* نلغي الحد الأدنى اللي كان يكبّر الكرت */
+  object-fit: cover;                     /* الصورة تتقص وتغطي المساحة بدون تشويه */
+  object-position: center 20%;           /* أي جزء من الصورة يظهر: غيّر الرقم 20% (0% = الأعلى، 100% = الأسفل) */
+}
+
+/* الجوال */
+@media (max-width: 600px) {
+  .service-category-card { height: 150px; }
+}
+/* ---------- لمن يفضّل تقليل الحركة (إعداد بالجهاز): نلغي كل الحركات ---------- */
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }

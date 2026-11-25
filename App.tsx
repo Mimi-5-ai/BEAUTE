@@ -1,16 +1,52 @@
+/* ==========================================================================
+   الملف الرئيسي لموقع أحاسيس الجمال (React)
+   --------------------------------------------------------------------------
+   فهرس الملف:
+   [1] الاستيرادات والإعدادات العامة
+   [2] مكوّن الأيقونات (Icon)
+   [3] مكوّن الشعار (Brand)
+   [4] النافذة المنبثقة (Modal): الحجز + الجولة + الأسعار
+   [5] سلايدر الخدمات (ServicesCarousel)
+   [6] قسم إنديبا (IndibaSection)
+   [7] صفحة الأسعار (PricesPage)  <-- الكروت اللي عدّلناها للجوال
+   [8] المكوّن الرئيسي (App): الهيدر + الأقسام + الفوتر
+   ========================================================================== */
+
+
+/* ==========================================================================
+   [1] الاستيرادات والإعدادات العامة
+   ========================================================================== */
+
 import { useEffect, useRef, useState } from "react"
 import {
-  featuredTreatments,
-  formatPrice,
-  priceRows,
+  featuredTreatments, // الخدمات المميزة (تظهر في السلايدر)
+  formatPrice,        // دالة تنسيق السعر (مثل 1,500)
+  priceRows,          // كل الخدمات (تظهر في صفحة الأسعار)
   type Treatment,
 } from "./services"
 
+// المسار الأساسي للموقع (يتغير حسب مكان الرفع)
 const siteBase = import.meta.env.BASE_URL
+// دالة تركّب مسار الصور بشكل صحيح
 const siteAsset = (path: string) => `${siteBase}${path.replace(/^\/+/, "")}`
+// مسار صفحة الأسعار
 const pricesPath = `${siteBase}prices`
+// هل المستخدم حالياً داخل صفحة الأسعار؟
 const isPricesPath = () =>
   window.location.pathname.replace(/\/+$/, "") === pricesPath.replace(/\/+$/, "")
+
+// رابط خرائط جوجل للمجمع
+const mapUrl =
+  "https://www.google.com/maps/search/?api=1&query=" +
+  encodeURIComponent("مجمع أحاسيس الجمال الطبي عرعر حي العزيزية")
+
+
+/* ==========================================================================
+   [2] مكوّن الأيقونات (Icon)
+   --------------------------------------------------------------------------
+   يرسم أي أيقونة بالموقع بالاسم، مثال: <Icon name="phone" size={18} />
+   لإضافة أيقونة جديدة: أضف اسمها في IconName ثم مسارها في paths
+   ========================================================================== */
 
 type IconName = "calendar" | "arrow" | "chevron" | "pin" | "phone" | "check" | "sparkle" | "shield" | "close" | "search" | "play" | "plus"
 interface IconProps {
@@ -76,6 +112,13 @@ function Icon({ name, size = 22 }: IconProps) {
   )
 }
 
+
+/* ==========================================================================
+   [3] مكوّن الشعار (Brand)
+   --------------------------------------------------------------------------
+   الشعار + اسم المجمع (يظهر بالهيدر)
+   ========================================================================== */
+
 function Brand({ logo = "/images/brand-b.webp" }: { logo?: string }) {
   return (
     <a className="brand" href="#home" aria-label="أحاسيس الجمال — الرئيسية">
@@ -95,9 +138,16 @@ function Brand({ logo = "/images/brand-b.webp" }: { logo?: string }) {
   )
 }
 
-const mapUrl =
-  "https://www.google.com/maps/search/?api=1&query=" +
-  encodeURIComponent("مجمع أحاسيس الجمال الطبي عرعر حي العزيزية")
+
+/* ==========================================================================
+   [4] النافذة المنبثقة (Modal)
+   --------------------------------------------------------------------------
+   نافذة وحدة تعرض 3 أنواع محتوى حسب state.type:
+   - "prices"  : جدول الأسعار
+   - "tour"    : صورة الجولة
+   - "booking" : الحجز والتواصل (واتساب + هاتف + الموقع)
+   ========================================================================== */
+
 type ModalState = { type: "prices" } | { type: "tour" } | {
   type: "booking"
   treatment?: Treatment
@@ -110,8 +160,10 @@ interface ModalProps {
 
 function Modal({ state, close, book }: ModalProps) {
   const dialog = useRef<HTMLDialogElement>(null)
-  const [search, setSearch] = useState("")
-  const [filter, setFilter] = useState("all")
+  const [search, setSearch] = useState("")   // نص البحث
+  const [filter, setFilter] = useState("all") // الفلتر المختار
+
+  // عند فتح النافذة: نفتحها ونمنع تمرير الصفحة اللي خلفها، وعند الإغلاق نرجّع كل شي
   useEffect(() => {
     if (!state || !dialog.current) return
     dialog.current.showModal()
@@ -122,11 +174,14 @@ function Modal({ state, close, book }: ModalProps) {
       document.body.style.overflow = previous
     }
   }, [state])
+
+  // الخدمات اللي تظهر بعد تطبيق البحث والفلتر
   const shown = priceRows.filter(
     (row) =>
       (filter === "all" || row.category === filter) &&
       row.name.includes(search.trim()),
   )
+
   return (
     <dialog
       ref={dialog}
@@ -134,6 +189,7 @@ function Modal({ state, close, book }: ModalProps) {
         state?.type === "tour" ? "tour-modal" : ""
       }`}
       onCancel={close}
+      // الضغط على الخلفية المعتمة يقفل النافذة
       onClick={(event) => {
         if (event.target === event.currentTarget) close()
       }}
@@ -141,6 +197,7 @@ function Modal({ state, close, book }: ModalProps) {
     >
       {state && (
         <div className="modal-content">
+          {/* زر الإغلاق (X) */}
           <button
             className="close-button"
             aria-label="إغلاق النافذة"
@@ -149,6 +206,8 @@ function Modal({ state, close, book }: ModalProps) {
             <Icon name="close" />
           </button>
           <span className="eyebrow">أحاسيس الجمال</span>
+
+          {/* عنوان النافذة حسب نوعها */}
           <h2 id="modal-title">
             {state.type === "prices"
               ? "خدماتنا وأسعارها"
@@ -156,11 +215,14 @@ function Modal({ state, close, book }: ModalProps) {
                 ? "أهلاً بكِ في عالمنا"
                 : "تبدأ عنايتكِ بخطوة"}
           </h2>
+
           {state.type === "prices" ? (
+            /* ---------- نافذة الأسعار ---------- */
             <>
               <p>
                 أسعار الخدمات حسب القائمة المرفقة من المجمع.
               </p>
+              {/* حقل البحث */}
               <label className="search-field">
                 <Icon name="search" size={19} />
                 <input
@@ -170,6 +232,7 @@ function Modal({ state, close, book }: ModalProps) {
                   aria-label="البحث في الأسعار"
                 />
               </label>
+              {/* أزرار الفلاتر */}
               <div className="price-filters" aria-label="تصفية الأسعار">
                 {[
                   ["all", "كل الخدمات"],
@@ -186,6 +249,7 @@ function Modal({ state, close, book }: ModalProps) {
                   </button>
                 ))}
               </div>
+              {/* جدول الأسعار */}
               <div className="price-table">
                 <div className="price-table-heading">
                   <span>الخدمة</span>
@@ -218,6 +282,7 @@ function Modal({ state, close, book }: ModalProps) {
               </p>
             </>
           ) : state.type === "tour" ? (
+            /* ---------- نافذة الجولة ---------- */
             <>
               <p>مساحة من الهدوء، وتفاصيل صُممت لراحتكِ.</p>
               <img
@@ -235,8 +300,10 @@ function Modal({ state, close, book }: ModalProps) {
               </a>
             </>
           ) : (
+            /* ---------- نافذة الحجز ---------- */
             <>
               <p>يسعدنا استقبالِك في مجمع أحاسيس الجمال الطبي.</p>
+              {/* ملخص الخدمة المختارة (إذا ضغطت زر حجز من كرت) */}
               {state.treatment && (
                 <div className="booking-summary">
                   <img src={siteAsset(state.treatment.image)} alt="" />
@@ -255,6 +322,7 @@ function Modal({ state, close, book }: ModalProps) {
                   </div>
                 </div>
               )}
+              {/* الموقع */}
               <div className="booking-location">
                 <Icon name="pin" />
                 <div>
@@ -262,6 +330,7 @@ function Modal({ state, close, book }: ModalProps) {
                   <p>المملكة العربية السعودية</p>
                 </div>
               </div>
+              {/* أرقام التواصل: غيّر الأرقام هنا إذا تغيرت */}
               <div className="booking-note">
                 <strong>لتنسيق موعدكِ</strong>
                 <div className="booking-contact-links">
@@ -295,16 +364,26 @@ function Modal({ state, close, book }: ModalProps) {
   )
 }
 
+
+/* ==========================================================================
+   [5] سلايدر الخدمات (ServicesCarousel)
+   --------------------------------------------------------------------------
+   الشريط الأفقي للخدمات المميزة بالصفحة الرئيسية، يدعم:
+   السحب بالماوس / اللمس بالجوال / الأسهم / لوحة المفاتيح / النقاط
+   ========================================================================== */
+
 interface CarouselProps {
   book: (treatment: Treatment) => void
 }
 function ServicesCarousel({ book }: CarouselProps) {
-  const track = useRef<HTMLDivElement>(null)
-  const drag = useRef({ down: false, x: 0, scroll: 0, moved: false })
-  const [page, setPage] = useState(0)
-  const [pages, setPages] = useState(2)
-  const [atStart, setAtStart] = useState(true)
-  const [atEnd, setAtEnd] = useState(false)
+  const track = useRef<HTMLDivElement>(null)                          // الشريط نفسه
+  const drag = useRef({ down: false, x: 0, scroll: 0, moved: false }) // حالة السحب بالماوس
+  const [page, setPage] = useState(0)        // رقم المجموعة الحالية (للنقاط)
+  const [pages, setPages] = useState(2)      // عدد المجموعات
+  const [atStart, setAtStart] = useState(true) // هل وصلنا للبداية؟ (يعطّل السهم)
+  const [atEnd, setAtEnd] = useState(false)    // هل وصلنا للنهاية؟ (يعطّل السهم)
+
+  // يحسب عدد الصفحات والموضع الحالي كل ما تغير الحجم أو تم التمرير
   useEffect(() => {
     const element = track.current
     if (!element) return
@@ -330,6 +409,8 @@ function ServicesCarousel({ book }: CarouselProps) {
       element.removeEventListener("scroll", update)
     }
   }, [])
+
+  // تحريك السلايدر صفحة كاملة (direction: 1 أو -1)
   const move = (direction: number) => {
     const element = track.current
     if (!element) return
@@ -344,6 +425,7 @@ function ServicesCarousel({ book }: CarouselProps) {
       behavior: reduced ? "instant" : "smooth",
     })
   }
+
   return (
     <div
       className="carousel"
@@ -351,6 +433,7 @@ function ServicesCarousel({ book }: CarouselProps) {
       aria-roledescription="عارض شرائح"
       aria-label="الخدمات والأسعار"
     >
+      {/* السهم الأيمن */}
       <button
         className="carousel-arrow arrow-right"
         onClick={() => move(1)}
@@ -359,6 +442,8 @@ function ServicesCarousel({ book }: CarouselProps) {
       >
         <Icon name="chevron" />
       </button>
+
+      {/* الشريط اللي فيه الكروت + أحداث السحب والكيبورد */}
       <div
         className="service-track"
         ref={track}
@@ -374,6 +459,7 @@ function ServicesCarousel({ book }: CarouselProps) {
             move(1)
           }
         }}
+        // بداية السحب (بالماوس فقط، اللمس يتعامل معه المتصفح)
         onPointerDown={(e) => {
           if (
             e.pointerType !== "mouse" ||
@@ -387,6 +473,7 @@ function ServicesCarousel({ book }: CarouselProps) {
             moved: false,
           }
         }}
+        // أثناء السحب
         onPointerMove={(e) => {
           if (!drag.current.down) return
           const delta = e.clientX - drag.current.x
@@ -397,6 +484,7 @@ function ServicesCarousel({ book }: CarouselProps) {
             e.currentTarget.scrollLeft = drag.current.scroll - delta
           }
         }}
+        // نهاية السحب
         onPointerUp={(e) => {
           drag.current.down = false
           e.currentTarget.classList.remove("dragging")
@@ -412,6 +500,7 @@ function ServicesCarousel({ book }: CarouselProps) {
             drag.current.down = false
         }}
       >
+        {/* رسم كرت لكل خدمة مميزة (البيانات من ملف services.ts) */}
         {featuredTreatments.map((treatment, index) => (
           <article
             className="treatment-card"
@@ -420,6 +509,7 @@ function ServicesCarousel({ book }: CarouselProps) {
             aria-roledescription="شريحة"
             aria-label={`${index + 1} من ${featuredTreatments.length}`}
           >
+            {/* صورة الكرت + الأيقونة + الشارة */}
             <div className={`treatment-photo treatment-${treatment.id}`}>
               <img
                 src={siteAsset(treatment.image)}
@@ -433,6 +523,7 @@ function ServicesCarousel({ book }: CarouselProps) {
                 draggable="false"
                 loading="lazy"
               />
+              {/* الأيقونة الدائرية حسب القسم */}
               <span className="treatment-symbol">
                 <Icon
                   name={
@@ -445,8 +536,10 @@ function ServicesCarousel({ book }: CarouselProps) {
                   size={20}
                 />
               </span>
+              {/* شارة "عناية مختارة" على أول كرت فقط */}
               {index === 0 && <span className="card-label">عناية مختارة</span>}
             </div>
+            {/* الاسم + الوصف + السعر + زر الحجز */}
             <div className="treatment-content">
               <h3>{treatment.name}</h3>
               <p>{treatment.description}</p>
@@ -469,6 +562,8 @@ function ServicesCarousel({ book }: CarouselProps) {
           </article>
         ))}
       </div>
+
+      {/* السهم الأيسر */}
       <button
         className="carousel-arrow arrow-left"
         onClick={() => move(-1)}
@@ -477,6 +572,8 @@ function ServicesCarousel({ book }: CarouselProps) {
       >
         <Icon name="chevron" />
       </button>
+
+      {/* الشريط السفلي: النص + النقاط + "اسحبي" */}
       <div className="carousel-bottom">
         <span>عناية تناسبكِ، اختاري ما يلائمكِ</span>
         <div className="carousel-dots">
@@ -486,6 +583,7 @@ function ServicesCarousel({ book }: CarouselProps) {
               aria-label={`مجموعة الخدمات ${index + 1}`}
               aria-current={page === index ? "true" : undefined}
               className={page === index ? "active" : ""}
+              // الضغط على نقطة ينقلك لمجموعتها
               onClick={() => {
                 const element = track.current
                 if (element)
@@ -512,7 +610,15 @@ function ServicesCarousel({ book }: CarouselProps) {
   )
 }
 
+
+/* ==========================================================================
+   [6] قسم إنديبا (IndibaSection)
+   --------------------------------------------------------------------------
+   لتعديل المميزات: غيّر النصوص داخل benefits
+   ========================================================================== */
+
 function IndibaSection() {
+  // قائمة المميزات (كل سطر يظهر بخانة بعلامة صح)
   const benefits = [
     "تكسير الدهون الموضعية",
     "شد البشرة ونحت القوام",
@@ -525,6 +631,7 @@ function IndibaSection() {
   return (
     <section id="indiba" className="indiba-section" aria-labelledby="indiba-title">
       <div className="container indiba-showcase">
+        {/* عنوان القسم */}
         <div className="section-title">
           <span className="section-kicker">تقنية متقدمة للعناية بالجسم والبشرة</span>
           <h2>
@@ -533,6 +640,7 @@ function IndibaSection() {
           <p>الجهاز الذي لا يزال حصريًا في شمال المملكة!</p>
         </div>
         <div className="indiba-showcase-grid">
+          {/* الكرت الكبير: الوصف + المميزات */}
           <article className="indiba-main-card">
             <span className="indiba-card-kicker">عناية متكاملة للجمال والرشاقة</span>
             <h3 id="indiba-title">تقنية تجمع نتائج الجسم والبشرة في تجربة واحدة</h3>
@@ -549,6 +657,7 @@ function IndibaSection() {
               ))}
             </div>
           </article>
+          {/* الكرت الجانبي: "حصرياً شمال المملكة" */}
           <aside className="indiba-exclusive-card">
             <div className="indiba-exclusive-mark">
               <Icon name="sparkle" size={28} />
@@ -564,23 +673,35 @@ function IndibaSection() {
   )
 }
 
+
+/* ==========================================================================
+   [7] صفحة الأسعار (PricesPage)  -- رابطها: /prices
+   --------------------------------------------------------------------------
+   صفحة مستقلة فيها: البحث + الفلاتر + كروت كل الخدمات
+   التنسيق (كرتين جنب بعض بالجوال) موجود بملف index.css قسم [11] و [15]
+   ========================================================================== */
+
 function PricesPage({ close }: { close: () => void }) {
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("")  // نص البحث
+  // الفلتر المبدئي يُقرأ من الرابط، مثال: /prices?category=laser
   const [filter, setFilter] = useState(
     () => new URLSearchParams(window.location.search).get("category") || "all",
   )
+  // الخدمات اللي تظهر بعد البحث والفلتر
   const shown = priceRows.filter(
     (row) =>
       (filter === "all" || row.category === filter) &&
       row.name.includes(search.trim()),
   )
 
+  // عند فتح الصفحة: نرجع لأعلى الصفحة
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" })
   }, [])
 
   return (
     <div className="prices-page" dir="rtl">
+      {/* ---------- الشريط العلوي: زر الرئيسية + اسم المجمع ---------- */}
       <header className="prices-header">
         <div className="container prices-header-inner">
           <button className="prices-back" onClick={close} aria-label="العودة إلى الرئيسية">
@@ -589,8 +710,10 @@ function PricesPage({ close }: { close: () => void }) {
           <strong className="prices-brand-name">أحاسيس الجمال</strong>
         </div>
       </header>
+
       <main>
         <section className="prices-catalog container">
+          {/* ---------- البحث والفلاتر ---------- */}
           <div className="prices-toolbar">
             <label className="search-field">
               <Icon name="search" size={19} />
@@ -601,6 +724,7 @@ function PricesPage({ close }: { close: () => void }) {
                 aria-label="البحث في قائمة الأسعار"
               />
             </label>
+            {/* لإضافة قسم جديد: أضف سطر هنا [الاسم الداخلي, النص الظاهر] */}
             <div className="price-filters" aria-label="تصفية الخدمات والأسعار">
               {[
                 ["all", "كل الخدمات"],
@@ -620,9 +744,12 @@ function PricesPage({ close }: { close: () => void }) {
               ))}
             </div>
           </div>
+
+          {/* ---------- شبكة الكروت ---------- */}
           <div className="prices-grid">
             {shown.map((row) => (
               <article className="price-card" key={row.id}>
+                {/* صورة الخدمة + شارة القسم */}
                 <div className="price-card-image">
                   <img
                     src={siteAsset(row.image)}
@@ -631,6 +758,7 @@ function PricesPage({ close }: { close: () => void }) {
                   />
                   <span>{row.category === "scars" ? "علاج ندبات" : row.category === "laser" ? "قسم الليزر" : row.category === "whitening" ? "قسم التشقير" : "قسم الحقن"}</span>
                 </div>
+                {/* الاسم + الوصف + السعر + زر الاستفسار */}
                 <div className="price-card-content">
                   <h2>{row.name}</h2>
                   <p>{row.description}</p>
@@ -640,6 +768,7 @@ function PricesPage({ close }: { close: () => void }) {
                     ) : (
                       <strong><bdi>{formatPrice(row.price)}</bdi> <small>ر.س</small></strong>
                     )}
+                    {/* زر "استفسري": يرجع للرئيسية ويفتح نافذة الحجز */}
                     <button
                       className="price-card-action"
                       onClick={() => {
@@ -654,6 +783,7 @@ function PricesPage({ close }: { close: () => void }) {
                 </div>
               </article>
             ))}
+            {/* رسالة لما ما تلقى خدمات */}
             {shown.length === 0 && (
               <p className="prices-empty">
             {filter === "whitening"
@@ -671,15 +801,27 @@ function PricesPage({ close }: { close: () => void }) {
   )
 }
 
+
+/* ==========================================================================
+   [8] المكوّن الرئيسي (App)
+   --------------------------------------------------------------------------
+   يجمع كل أقسام الصفحة الرئيسية بالترتيب:
+   الهيدر > الواجهة > الخدمات > البانر > إنديبا > عن المجمع > التواصل > الفوتر
+   ========================================================================== */
+
 export default function App() {
-  const [modal, setModal] = useState<ModalState>(null)
-  const [active, setActive] = useState("home")
-  const [pricesPage, setPricesPage] = useState(() => isPricesPath())
+  const [modal, setModal] = useState<ModalState>(null)          // النافذة المفتوحة حالياً
+  const [active, setActive] = useState("home")                  // القسم الظاهر الحين (لتلوين القائمة)
+  const [pricesPage, setPricesPage] = useState(() => isPricesPath()) // هل نعرض صفحة الأسعار؟
+
+  // يتابع زر الرجوع بالمتصفح
   useEffect(() => {
     const handlePopState = () => setPricesPage(isPricesPath())
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
   }, [])
+
+  // فتح صفحة الأسعار (مع قسم معين اختياري)
   const openPrices = (category: string = "all") => {
     const selectedCategory = typeof category === "string" ? category : "all"
     const target = selectedCategory === "all"
@@ -688,12 +830,16 @@ export default function App() {
     window.history.pushState({}, "", target)
     setPricesPage(true)
   }
+  // الرجوع من صفحة الأسعار للرئيسية
   const closePrices = () => {
     window.history.pushState({}, "", siteBase)
     setPricesPage(false)
   }
+  // فتح نافذة الحجز
   const book = (treatment?: Treatment) =>
     setModal({ type: "booking", treatment })
+
+  // يراقب أي قسم ظاهر بالشاشة عشان يلوّن رابطه بالقائمة
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -708,6 +854,8 @@ export default function App() {
       .forEach((element) => observer.observe(element))
     return () => observer.disconnect()
   }, [])
+
+  // إذا كنا بصفحة الأسعار نعرضها بدل الصفحة الرئيسية
   if (pricesPage) {
     return <PricesPage close={closePrices} />
   }
@@ -715,9 +863,12 @@ export default function App() {
   return (
     <div dir="rtl">
       <div className="hero-shell">
+
+        {/* ================= الهيدر (الشريط العلوي) ================= */}
         <header className="site-header">
           <div className="container header-inner">
             <Brand />
+            {/* قائمة التنقل (مخفية بالجوال) */}
             <nav aria-label="التنقل الرئيسي">
               {[
                 ["home", "الرئيسية"],
@@ -738,9 +889,11 @@ export default function App() {
                 قائمة الأسعار
               </button>
             </nav>
+            {/* رابط "الرئيسية" (يظهر بالجوال فقط) */}
             <a className="mobile-home-link" href="#home">
               الرئيسية
             </a>
+            {/* زر الحجز عبر واتساب */}
             <a
               className="button primary header-book"
               href="https://wa.me/966500656345"
@@ -751,8 +904,12 @@ export default function App() {
             </a>
           </div>
         </header>
+
         <main>
+
+          {/* ================= الواجهة الرئيسية (Hero) ================= */}
           <section id="home" className="hero">
+            {/* الصورة الخلفية */}
             <div className="hero-art">
               <img
                 src={siteAsset("/images/beauty-portrait.jpg")}
@@ -761,6 +918,7 @@ export default function App() {
               />
               <div className="hero-art-shade" />
             </div>
+            {/* النص والزر */}
             <div className="container hero-inner">
               <div className="hero-copy">
                 <h1>
@@ -789,6 +947,8 @@ export default function App() {
               EMOTIONS AND BEAUTY
             </span>
           </section>
+
+          {/* ================= قسم الخدمات ================= */}
           <section id="services" className="services-section">
             <div className="container">
               <div className="section-title">
@@ -798,15 +958,18 @@ export default function App() {
                 </h2>
                 <p>خيارات تجميلية مختارة، لأن لكل جمال عناية خاصة.</p>
               </div>
+              {/* السلايدر */}
               <ServicesCarousel book={book} />
+              {/* رابط قائمة الأسعار كاملة */}
               <div className="all-prices-link">
                 <button onClick={() => openPrices("all")}>
                   استعرضي قائمة الأسعار كاملة <Icon name="arrow" size={16} />
                 </button>
               </div>
+              {/* كرتين: الليزر + التشقير */}
               <div className="service-category-grid">
                 <article className="service-category-card">
-                  <img src={siteAsset("/images/laser.webp")} alt="قسم الليزر" loading="lazy" />
+                  <img src={siteAsset("/images/ليزر_هيرو.jpg")} alt="قسم الليزر" loading="lazy" />
                   <div>
                     <span>قسم متخصص</span>
                     <h3>خدمات الليزر</h3>
@@ -816,10 +979,8 @@ export default function App() {
                     </button>
                   </div>
                 </article>
-                <article className="service-category-card">
-                  <div className="whitening-placeholder">
-                    <Icon name="sparkle" size={34} />
-                  </div>
+                               <article className="service-category-card">
+                  <img src={siteAsset("/images/تشقير_بالليزر.jpg")} alt="قسم التشقير" loading="lazy" />
                   <div>
                     <span>قسم جديد</span>
                     <h3>خدمات التشقير</h3>
@@ -833,6 +994,7 @@ export default function App() {
             </div>
           </section>
 
+          {/* ================= بانر العناية ================= */}
           <section className="care-banner container" aria-label="عناية متكاملة">
             <div className="banner-decoration" />
             <div className="banner-copy">
@@ -856,8 +1018,10 @@ export default function App() {
             </button>
           </section>
 
+          {/* ================= قسم إنديبا ================= */}
           <IndibaSection />
 
+          {/* ================= عن المجمع ================= */}
           <section id="about" className="about-section container">
             <div className="about-copy">
               <span className="eyebrow">
@@ -881,6 +1045,7 @@ export default function App() {
                   <Icon name="check" size={15} /> خصوصية واهتمام
                 </span>
               </div>
+              {/* يفتح نافذة الجولة */}
               <button
                 className="underlined-link"
                 onClick={() => setModal({ type: "tour" })}
@@ -901,6 +1066,8 @@ export default function App() {
               </div>
             </div>
           </section>
+
+          {/* ================= التواصل ================= */}
           <section id="contact" className="contact-section">
             <div className="container contact-inner">
               <div>
@@ -934,6 +1101,8 @@ export default function App() {
           </section>
         </main>
       </div>
+
+      {/* ================= الفوتر ================= */}
       <footer className="site-footer">
         <div className="container footer-inner">
           <span className="footer-copyright">
@@ -942,6 +1111,8 @@ export default function App() {
           </span>
         </div>
       </footer>
+
+      {/* النافذة المنبثقة (تظهر فقط لما نفتحها) */}
       <Modal state={modal} close={() => setModal(null)} book={book} />
     </div>
   )
